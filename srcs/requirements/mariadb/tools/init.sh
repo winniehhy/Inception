@@ -10,8 +10,8 @@ fi
 if [ ! -f "/var/lib/mysql/.setup_complete" ]; then
     echo "Running database setup..."
     
-    # Start MariaDB in background
-    mysqld --user=mysql &
+    # Start MariaDB in background (bind to all interfaces)
+    mysqld --user=mysql --bind-address=0.0.0.0 &
     MYSQL_PID=$!
     
     # Wait for MariaDB to be ready
@@ -42,4 +42,4 @@ fi
 
 # Start MariaDB normally
 echo "Starting MariaDB..."
-exec mysqld --user=mysql
+exec mysqld --user=mysql --bind-address=0.0.0.0
