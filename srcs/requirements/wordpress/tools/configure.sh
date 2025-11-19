@@ -33,10 +33,8 @@ fi
 chown -R www-data:www-data /var/www/wordpress
 
 # Configure PHP-FPM to listen on all interfaces
-sed -i 's/listen = .*/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+PHP_VERSION=$(php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')
+sed -i "s|listen = .*|listen = 9000|" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
 # Start PHP-FPM
-php-fpm7.4 -F
-
-# Start PHP-FPM
-php-fpm7.4 -F
+php-fpm${PHP_VERSION} -F
