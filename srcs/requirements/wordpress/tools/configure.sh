@@ -23,9 +23,16 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
     wp core install \
         --url="hheng.42.fr" \
         --title="Inception" \
-        --admin_user="admin" \
-        --admin_password="$(cat /run/secrets/db_password)" \
+        --admin_user="hheng" \
+        --admin_password="$(cat /run/secrets/wp_password)" \
         --admin_email="admin@hheng.42.fr" \
+        --path=/var/www/wordpress \
+        --allow-root
+    
+    # Create second WordPress user (required by subject)
+    wp user create wpuser2 user@hheng.42.fr \
+        --role=author \
+        --user_pass="$(cat /run/secrets/db_password)" \
         --path=/var/www/wordpress \
         --allow-root
 fi

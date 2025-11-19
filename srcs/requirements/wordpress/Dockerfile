@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN mkdir -p /var/www /run/php
 
-RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
+RUN wget https://wordpress.org/wordpress-6.4.3.tar.gz -O /tmp/wordpress.tar.gz \
     && tar -xzf /tmp/wordpress.tar.gz -C /var/www/ \
     && rm /tmp/wordpress.tar.gz \
     && chown -R www-data:www-data /var/www/wordpress
