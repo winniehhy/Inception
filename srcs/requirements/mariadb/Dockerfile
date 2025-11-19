@@ -8,7 +8,9 @@ RUN mkdir -p /run/mysqld
 RUN chown -R mysql:mysql /run/mysqld
 
 COPY conf/my.cnf /etc/mysql/my.cnf
+COPY tools/init.sh /tmp/init.sh
+RUN chmod +x /tmp/init.sh
 
 EXPOSE 3306
 
-CMD ["mysqld", "--user=mysql"]
+CMD ["/tmp/init.sh"]

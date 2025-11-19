@@ -5,7 +5,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/wordpress
     networks:
       - inception
     depends_on:
@@ -33,7 +33,7 @@ services:
     build: ./requirements/wordpress
     container_name: wordpress
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/wordpress
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: ${MYSQL_USER}
@@ -45,6 +45,7 @@ services:
       - mariadb
     secrets:
       - db_password
+      - db_root_password
     restart: unless-stopped
 
 volumes:

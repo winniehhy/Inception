@@ -10,9 +10,10 @@ RUN apt-get update && apt-get install -y \
     php-mbstring \
     php-zip \
     wget \
+    mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/www
+RUN mkdir -p /var/www /run/php
 
 RUN wget https://wordpress.org/latest.tar.gz -O /tmp/wordpress.tar.gz \
     && tar -xzf /tmp/wordpress.tar.gz -C /var/www/ \
