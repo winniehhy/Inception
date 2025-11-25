@@ -43,10 +43,65 @@ services:
       - inception
     depends_on:
       - mariadb
+      - redis
     secrets:
       - db_password
       - db_root_password
       - wp_password
+    restart: unless-stopped
+
+  # BONUS SERVICES
+  redis:
+    build: ./requirements/bonus/redis
+    container_name: redis
+    networks:
+      - inception
+    restart: unless-stopped
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    container_name: ftp
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+    volumes:
+      - wordpress_data:/var/www/wordpress
+    networks:
+      - inception
+    secrets:
+      - ftp_password
+    restart: unless-stopped
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+  website:
+    build: ./requirements/bonus/website
+    container_name: website
+    ports:
+      - "8081:80"
+    networks:
+      - inception
+    restart: unless-stopped
+
+  portainer:
+    build: ./requirements/bonus/portainer
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - inception
     restart: unless-stopped
 
 volumes:
@@ -62,6 +117,8 @@ volumes:
       type: none
       o: bind
       device: /home/winniehhy/data/wordpress
+  portainer_data:
+    driver: local
 
 networks:
   inception:
@@ -74,3 +131,5 @@ secrets:
     file: ./secrets/db_password.txt
   wp_password:
     file: ./secrets/wp_password.txt
+  ftp_password:
+    file: ./secrets/ftp_password.txt
