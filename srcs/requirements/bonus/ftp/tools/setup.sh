@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Create FTP user if not exists
-if ! id -u ftpuser > /dev/null 2>&1; then
-    useradd -m ftpuser
-    echo "ftpuser:$(cat /run/secrets/ftp_password)" | chpasswd
-    echo "ftpuser" > /etc/vsftpd.userlist
+if ! id -u ${FTP_USER} > /dev/null 2>&1; then
+    useradd -m ${FTP_USER}
+    echo "${FTP_USER}:${FTP_PASSWORD}" | chpasswd
+    echo "${FTP_USER}" > /etc/vsftpd.userlist
 fi
 
 # Give FTP user access to WordPress files
-chown -R ftpuser:ftpuser /var/www/wordpress
+chown -R ${FTP_USER}:${FTP_USER} /var/www/wordpress
 
 # Start vsftpd
 exec /usr/sbin/vsftpd /etc/vsftpd.conf

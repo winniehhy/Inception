@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 # Create directories for WordPress files and PHP-FPM runtime files
 RUN mkdir -p /var/www /run/php
 
-# Download WordPress version 6.4.3 (specific version, not "latest" - required by subject)
+# Download WordPress version 6.4.3 (specific version, not "latest" )
 # Extract to /var/www/, remove tarball to save space
 # Change ownership to www-data user (web server user)
 RUN wget https://wordpress.org/wordpress-6.4.3.tar.gz -O /tmp/wordpress.tar.gz \

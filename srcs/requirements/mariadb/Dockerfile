@@ -1,4 +1,4 @@
-# Use Debian Bookworm (penultimate stable version) as base image
+
 FROM debian:bookworm
 
 # Update package list and install MariaDB server
@@ -14,14 +14,14 @@ RUN mkdir -p /run/mysqld
 RUN chown -R mysql:mysql /run/mysqld
 
 # Copy database initialization script from host to container
-COPY tools/init.sh /tmp/init.sh
+COPY tools/init.sh /usr/local/bin/init.sh
 
 # Make the initialization script executable
-RUN chmod +x /tmp/init.sh
+RUN chmod +x /usr/local/bin/init.sh
 
 # Document that MariaDB listens on port 3306 (default MySQL/MariaDB port)
 EXPOSE 3306
 
 # Run initialization script when container starts
 # Script will initialize database, create users, and start MariaDB in foreground
-CMD ["/tmp/init.sh"]
+CMD ["/usr/local/bin/init.sh"]

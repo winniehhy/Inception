@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wait for database to be ready
-while ! mysqladmin ping -h"mariadb" -u"root" --password="$(cat /run/secrets/db_root_password)" --silent; do
+while ! mysqladmin ping -h"mariadb" -u"root" --password="${MYSQL_ROOT_PASSWORD}" --silent; do
     sleep 1
 done
 
@@ -14,7 +14,7 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
     wp config create \
         --dbname="${WORDPRESS_DB_NAME}" \
         --dbuser="${WORDPRESS_DB_USER}" \
-        --dbpass="$(cat /run/secrets/db_password)" \
+        --dbpass="${WORDPRESS_DB_PASSWORD}" \
         --dbhost="${WORDPRESS_DB_HOST}" \
         --path=/var/www/wordpress \
         --allow-root
@@ -23,16 +23,16 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
     wp core install \
         --url="hheng.42.fr" \
         --title="Inception" \
-        --admin_user="hheng" \
-        --admin_password="$(cat /run/secrets/wp_password)" \
-        --admin_email="admin@hheng.42.fr" \
+        --admin_user="${WORDPRESS_ADMIN_USER}" \
+        --admin_password="${WORDPRESS_ADMIN_PASSWORD}" \
+        --admin_email="${WORDPRESS_ADMIN_EMAIL}" \
         --path=/var/www/wordpress \
         --allow-root
     
-    # Create second WordPress user (required by subject)
-    wp user create wpuser2 user@hheng.42.fr \
+    # Create second WordPress user 
+    wp user create ${WORDPRESS_USER2} ${WORDPRESS_USER2_EMAIL} \
         --role=author \
-        --user_pass="$(cat /run/secrets/db_password)" \
+        --user_pass="${WORDPRESS_USER2_PASSWORD}" \
         --path=/var/www/wordpress \
         --allow-root
 fi
