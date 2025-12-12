@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 echo "Starting FTP setup..."
 
 if ! id -u ftpuser > /dev/null 2>&1; then
@@ -19,5 +17,5 @@ if [ -d /var/www/wordpress/wp-content/uploads ]; then
     chmod -R 775 /var/www/wordpress/wp-content/uploads
 fi
 
-echo "Starting vsftpd..."
+echo "Starting vsftpd in foreground mode..."
 exec /usr/sbin/vsftpd /etc/vsftpd.conf
