@@ -1,17 +1,22 @@
-FROM debian:bookworm
+FROM debian:bullseye
 
 RUN apt-get update && apt-get install -y \
-    wget \
     ca-certificates \
+    curl \
+    wget \
+    gnupg \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and install Portainer
-RUN wget https://github.com/portainer/portainer/releases/download/2.19.4/portainer-2.19.4-linux-amd64.tar.gz && \
-    tar -xvzf portainer-2.19.4-linux-amd64.tar.gz && \
-    mv portainer/portainer /usr/local/bin/portainer && \
-    chmod +x /usr/local/bin/portainer && \
-    rm -rf portainer portainer-2.19.4-linux-amd64.tar.gz
+RUN mkdir -p /usr/libexec/docker/cli-plugins \
+    && curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-x86_64 \
+       -o /usr/libexec/docker/cli-plugins/docker-compose \
+    && chmod +x /usr/libexec/docker/cli-plugins/docker-compose
 
-EXPOSE 9000
+RUN curl -fsSL https://github.com/portainer/portainer/releases/download/2.20.3/portainer-2.20.3-linux-amd64.tar.gz \
+    | tar -xz -C /usr/local/bin --strip-components=1
 
-CMD ["/usr/local/bin/portainer", "--bind=:9000"]
+
+EXPOSE 9443
+
+CMD ["portainer", "--http-disabled", "--bind=:9443"]

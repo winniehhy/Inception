@@ -87,9 +87,9 @@ echo -e "${YELLOW}[5/6] Testing Portainer...${NC}"
 portainer_status=$(docker inspect portainer --format='{{.State.Status}}' 2>/dev/null)
 if [ "$portainer_status" = "running" ]; then
     print_test 0 "Portainer container is running"
-    curl -s http://localhost:9000 > /dev/null 2>&1
+    curl -s http://localhost:9443 > /dev/null 2>&1
     print_test $? "Portainer web interface is accessible"
-    echo -e "    → Access at: ${BLUE}http://localhost:9000${NC}"
+    echo -e "    → Access at: ${BLUE}http://localhost:9443${NC}"
 else
     print_test 1 "Portainer container is $portainer_status"
     echo -e "    ${RED}→ Check logs: docker logs portainer${NC}"
@@ -143,7 +143,7 @@ echo -e "   • Verify it's not PHP (should be HTML/JS/CSS)"
 echo ""
 
 echo -e "${GREEN}5. Portainer (5th bonus service):${NC}"
-echo -e "   • Open: ${BLUE}http://localhost:9000${NC}"
+echo -e "   • Open: ${BLUE}http://localhost:9443${NC}"
 echo -e "   • Create admin account on first visit"
 echo -e "   • Manage Docker containers through web UI"
 echo ""

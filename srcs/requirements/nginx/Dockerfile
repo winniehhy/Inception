@@ -1,31 +1,35 @@
-# Use Debian Bookworm (penultimate stable version) as base image
-FROM debian:bookworm
+FROM debian:bullseye
 
-# Update package list and install NGINX web server and OpenSSL for certificates
-# Clean apt cache to reduce image size
+
+# apt-get update - Update package list (like checking what's in the store)
+# install nginx - Web server software
+# install openssl - Tool to create SSL certificates (for HTTPS)
+# rm -rf /var/lib/apt/lists/* - Delete cache to make image smaller (cleanup)
 RUN apt-get update && apt-get install -y \
     nginx \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create self-signed SSL/TLS certificate for HTTPS
-# -newkey rsa:4096: Generate 4096-bit RSA key (very secure)
-# -x509: Create self-signed certificate (not from Certificate Authority)
-# -sha256: Use SHA-256 hash algorithm
-# -days 365: Valid for 1 year
-# -nodes: No password protection (no DES encryption)
-# -subj: Certificate subject with domain name (CN = Common Name)
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
+#create self-signed SSL certificate
+# req -x509: create self signed cert
+# sha256 - hashing algorithm
+# days 365 - valid for 1 year
+# nodes - no need password everytime server restarts
+# out - where to save cert
+# keyout - where to save private key
+# subj - auto fill up certificate details ( C=FR - Country: France // CN=hheng.42.fr - Domain name)
+RUN openssl req  -x509 -sha256 -days 365 -nodes \
     -out /etc/ssl/certs/nginx.crt \
     -keyout /etc/ssl/private/nginx.key \
-    -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=42/CN=hheng.42.fr www.hheng.42.fr"
+    -subj "/C=MALAYSIA/ST=KL/L=SELANGOR/O=42KL/OU=42/CN=hheng.42.fr www.hheng.42.fr"
 
-# Copy custom NGINX configuration to default site location
+#Copy  custom nginx configuration file into the container. Tells nginx how to behave
 COPY conf/nginx.conf /etc/nginx/sites-available/default
 
-# Document that NGINX listens on port 443 (HTTPS with SSL/TLS)
 EXPOSE 443
 
-# Start NGINX in foreground mode (required for Docker container to stay alive)
-# "daemon off" prevents NGINX from running as background process
+# CMD = command
+# nginx - Start the nginx web server
+# -g daemon off; - Keep nginx running in the foreground (so the container doesn't stop) until we tell it to stop
+# subject rules :NO infinite loops, NO 'tail -f', NO 'sleep infinity
 CMD ["nginx", "-g", "daemon off;"]
