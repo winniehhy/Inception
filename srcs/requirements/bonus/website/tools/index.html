@@ -3,122 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inception Bonus - Portfolio</title>
+    <title>Inception Project - Static Website</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #333;
             max-width: 800px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
         }
         h1 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
         }
         h2 {
-            font-size: 1.5em;
-            margin: 30px 0 15px;
-            color: #ffd700;
-        }
-        p {
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-        .skills {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            color: #555;
             margin-top: 20px;
         }
-        .skill-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            transition: transform 0.3s ease;
+        h3 {
+            color: #666;
+            margin-top: 15px;
         }
-        .skill-item:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.3);
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            padding: 3px 0;
         }
         .footer {
             text-align: center;
             margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            color: #888;
             font-size: 0.9em;
-            opacity: 0.8;
-        }
-        .highlight {
-            color: #ffd700;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 Inception Project</h1>
-        <p style="text-align: center; font-size: 1.3em; margin-bottom: 30px;">
-            Static Website Bonus - <span class="highlight">hheng</span>
+    <h1>Inception Project - Static Website</h1>
+        <p><strong>Author:</strong> hheng</p>
+
+        <h2>About</h2>
+        <p>
+            This is a static website created as a bonus service for the Inception project.
+            It demonstrates setting up additional Docker containers beyond the mandatory requirements.
         </p>
 
-        <h2>📚 About This Project</h2>
-        <p>
-            This is a <span class="highlight">static website</span> created as part of the 
-            <strong>Inception bonus requirements</strong>. It demonstrates the ability to 
-            set up additional services using Docker containers.
-        </p>
+        <h2>Services</h2>
+        <h3>Mandatory:</h3>
+        <ul>
+            <li>✓ NGINX (Web Server with TLS)</li>
+            <li>✓ WordPress (PHP-FPM)</li>
+            <li>✓ MariaDB (Database)</li>
+        </ul>
 
-        <h2>🛠️ Technologies Used</h2>
-        <div class="skills">
-            <div class="skill-item">Docker</div>
-            <div class="skill-item">Docker Compose</div>
-            <div class="skill-item">NGINX</div>
-            <div class="skill-item">MariaDB</div>
-            <div class="skill-item">WordPress</div>
-            <div class="skill-item">Redis</div>
-            <div class="skill-item">FTP</div>
-            <div class="skill-item">Adminer</div>
-        </div>
+        <h3>Bonus:</h3>
+        <ul>
+            <li>✓ Redis (Cache)</li>
+            <li>✓ FTP Server</li>
+            <li>✓ Adminer (Database Management)</li>
+            <li>✓ Portainer (Container Management)</li>
+            <li>✓ Static Website (This page)</li>
+        </ul>
 
-        <h2>✨ Bonus Services</h2>
+        <h2>Technologies</h2>
         <p>
-            ✅ Redis Cache for WordPress optimization<br>
-            ✅ FTP Server for file management<br>
-            ✅ Adminer for database administration<br>
-            ✅ Static Website (you're viewing it now!)<br>
-            ✅ Portainer for Docker container management
-        </p>
-
-        <h2>🎯 Project Goals</h2>
-        <p>
-            This Inception project demonstrates proficiency in system administration, 
-            containerization, networking, and security best practices. Each service runs 
-            in its own isolated container with proper volume management and network configuration.
+            Docker • Docker Compose • NGINX • MariaDB • WordPress • PHP-FPM • Redis • vsftpd
         </p>
 
         <div class="footer">
-            <p>Built with ❤️ using pure HTML & CSS (No PHP!)</p>
-            <p>42 School - Inception Project © 2025</p>
+            <p>By winnie </p>
         </div>
     </div>
 </body>

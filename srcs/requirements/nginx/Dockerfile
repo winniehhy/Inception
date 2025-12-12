@@ -18,10 +18,10 @@ RUN apt-get update && apt-get install -y \
 # out - where to save cert
 # keyout - where to save private key
 # subj - auto fill up certificate details ( C=FR - Country: France // CN=hheng.42.fr - Domain name)
-RUN openssl req  -x509 -sha256 -days 365 -nodes \
+RUN openssl req  -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
     -out /etc/ssl/certs/nginx.crt \
     -keyout /etc/ssl/private/nginx.key \
-    -subj "/C=MALAYSIA/ST=KL/L=SELANGOR/O=42KL/OU=42/CN=hheng.42.fr www.hheng.42.fr"
+    -subj "/C=MY/ST=KL/L=SELANGOR/O=42KL/OU=42/CN=hheng.42.fr"
 
 #Copy  custom nginx configuration file into the container. Tells nginx how to behave
 COPY conf/nginx.conf /etc/nginx/sites-available/default
