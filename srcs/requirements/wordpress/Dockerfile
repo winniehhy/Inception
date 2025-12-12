@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     php-xml \
     php-mbstring \
     php-zip \
+    php-redis \
     wget \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/*
@@ -47,7 +48,8 @@ RUN chmod +x /tmp/configure.sh
 # NGINX will connect to this port to process PHP files
 EXPOSE 9000
 
-# Run configuration script when container starts
-# Script will wait for MariaDB, install wp-cli, configure WordPress, create users,
-# and start PHP-FPM in foreground mode
-CMD ["/tmp/configure.sh"]
+# ENTRYPOINT runs setup script first (DB wait, WP install, users, Redis)
+ENTRYPOINT ["/tmp/configure.sh"]
+
+# CMD runs the main process after setup completes
+CMD ["sh", "-c", "php-fpm$(php -r 'echo PHP_MAJOR_VERSION.\".\".PHP_MINOR_VERSION;') -F"]

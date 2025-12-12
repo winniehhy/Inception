@@ -126,10 +126,10 @@ networks:
 
 secrets:
   db_root_password:
-    file: ./secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt
   db_password:
-    file: ./secrets/db_password.txt
+    file: ../secrets/db_password.txt
   wp_password:
-    file: ./secrets/wp_password.txt
+    file: ../secrets/wp_password.txt
   ftp_password:
-    file: ./secrets/ftp_password.txt
+    file: ../secrets/ftp_password.txt
