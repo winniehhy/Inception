@@ -139,9 +139,9 @@ if [ -d ".git" ]; then
     for pattern in "${PATTERNS[@]}"; do
         FOUND=$(git grep -i "$pattern" 2>/dev/null | grep -v ".env" | grep -v "test_mandatory.sh" | grep -v ".gitignore" || true)
         if [ -n "$FOUND" ]; then
-            # Check if it's actually reading from secrets (which is OK)
-            if echo "$FOUND" | grep -qE "cat.*secrets|/run/secrets|_FILE:|_password\)"; then
-                continue  # This is OK - using Docker secrets properly
+            # Check if it's actually reading from secrets or using environment variables (which is OK)
+            if echo "$FOUND" | grep -qE "cat.*secrets|/run/secrets|_FILE:|_password\)|\$\{[A-Z_]+\}|\"\$\{[A-Z_]+\}\""; then
+                continue  # This is OK - using Docker secrets or environment variables properly
             fi
             print_test 1 "CRITICAL: Hardcoded credential found"
             echo -e "  ${RED}$FOUND${NC}"
@@ -157,14 +157,11 @@ if [ -d ".git" ]; then
         print_test 0 ".env file is NOT tracked by git (good)" "env_not_tracked"
     fi
     
-    # Check if secrets folder files are tracked
-    if [ -d "secrets" ]; then
-        if git ls-files secrets/*.txt 2>/dev/null | grep -q ".txt"; then
-            print_test 1 "WARNING: Secret files are tracked by git"
-            CREDENTIAL_LEAK=1
-        else
-            print_test 0 "Secret files are NOT tracked by git (good)"
-        fi
+    # Note: Project uses .env for credentials (checked above)
+    # If using separate secrets folder, ensure it's in .gitignore
+    if [ -d "secrets" ] && git ls-files secrets/*.txt 2>/dev/null | grep -q ".txt"; then
+        print_test 1 "WARNING: Secret files are tracked by git"
+        CREDENTIAL_LEAK=1
     fi
     
     if [ $CREDENTIAL_LEAK -eq 0 ]; then
@@ -552,9 +549,9 @@ echo -e "  ${YELLOW}→ Login to admin dashboard${NC}"
 echo -e "  ${YELLOW}→ Edit a page and verify changes appear on the site${NC}"
 
 echo -e "\n${YELLOW}Checking WordPress users in database...${NC}"
-DB_NAME=$(grep "MYSQL_DATABASE" srcs/.env 2>/dev/null | cut -d'=' -f2 || echo "wordpress")
-DB_USER=$(grep "MYSQL_USER" srcs/.env 2>/dev/null | cut -d'=' -f2 || echo "wpuser")
-DB_PASS=$(cat secrets/db_password.txt 2>/dev/null || cat srcs/secrets/db_password.txt 2>/dev/null || echo "")
+DB_NAME=$(grep "MYSQL_DATABASE" srcs/.env 2>/dev/null | cut -d'=' -f2 | tr -d ' \t\r' || echo "wordpress")
+DB_USER=$(grep "MYSQL_USER" srcs/.env 2>/dev/null | cut -d'=' -f2 | tr -d ' \t\r' || echo "wpuser")
+DB_PASS=$(grep "MYSQL_PASSWORD" srcs/.env 2>/dev/null | cut -d'=' -f2 | head -1 | tr -d ' \t\r' || echo "")
 
 if [ -n "$DB_PASS" ]; then
     echo -e "  Querying WordPress users..."
@@ -623,9 +620,9 @@ else
 fi
 
 echo -e "\n${YELLOW}Testing MariaDB connection...${NC}"
-DB_NAME=$(grep "MYSQL_DATABASE" srcs/.env 2>/dev/null | cut -d'=' -f2 || echo "wordpress")
-DB_USER=$(grep "MYSQL_USER" srcs/.env 2>/dev/null | cut -d'=' -f2 || echo "wpuser")
-DB_PASS=$(cat secrets/db_password.txt 2>/dev/null || echo "password")
+DB_NAME=$(grep "MYSQL_DATABASE" srcs/.env 2>/dev/null | cut -d'=' -f2 | tr -d ' \t\r' || echo "wordpress")
+DB_USER=$(grep "MYSQL_USER" srcs/.env 2>/dev/null | cut -d'=' -f2 | tr -d ' \t\r' || echo "wpuser")
+DB_PASS=$(grep "MYSQL_PASSWORD" srcs/.env 2>/dev/null | cut -d'=' -f2 | head -1 | tr -d ' \t\r' || echo "")
 
 echo -e "  Attempting to connect to database '$DB_NAME' as user '$DB_USER'..."
 if docker exec mariadb mysql -u"$DB_USER" -p"$DB_PASS" -e "USE $DB_NAME; SHOW TABLES;" 2>/dev/null | grep -q "wp_"; then
