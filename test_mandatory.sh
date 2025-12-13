@@ -646,16 +646,13 @@ print_header "7. PERSISTENCE TEST"
 echo -e "${YELLOW}This test requires a system reboot!${NC}"
 echo -e "${YELLOW}Manual steps to verify persistence:${NC}"
 echo -e "  1. Make a change to WordPress (edit a page, add a post, etc.)"
-echo -e "  2. Run: ${GREEN}sudo reboot${NC}"
-echo -e "  3. After reboot, go to project directory"
-echo -e "  4. Run: ${GREEN}make${NC}"
-echo -e "  5. Verify your WordPress changes are still present"
-echo -e "  6. Verify MariaDB data is still intact"
-echo -e "\n${YELLOW}Alternative quick test (without reboot):${NC}"
-echo -e "  1. Make a change to WordPress"
-echo -e "  2. Run: ${GREEN}docker compose -f srcs/docker-compose.yml down${NC}"
-echo -e "  3. Run: ${GREEN}make${NC}"
-echo -e "  4. Verify changes are still present (volumes persist)"
+echo -e "  2. Stop all container
+echo -e "  3. Run: docker compose -f srcs/docker-compose.yml down
+echo -e "  4. Verify containers are stopped but volumes remain:
+echo -e "  5. docker ps -a  # Should show no running containers
+echo -e "  6. docker volume ls  # Should still show your volumes
+echo -e "   7. Restart everything : make
+
 
 # ============================================
 # SUMMARY
