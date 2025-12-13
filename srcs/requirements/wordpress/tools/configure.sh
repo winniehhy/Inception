@@ -3,9 +3,9 @@
 # Don't start WordPress setup until MariaDB is ready
 # mysqladmin ping - Try to connect to database
 # -h"mariadb" - Connect to host named "mariadb" (container name)
-# $(cat /run/secrets/db_root_password) - Read password from secret file
+# ${MYSQL_ROOT_PASSWORD} - Read password from environment variable
 # sleep 1 - Wait 1 second between attempts
-while ! mysqladmin ping -h"mariadb" -u"root" --password="$(cat /run/secrets/db_root_password)" --silent; do
+while ! mysqladmin ping -h"mariadb" -u"root" --password="${MYSQL_ROOT_PASSWORD}" --silent; do
     sleep 1
 done
 
@@ -20,7 +20,7 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
     wp config create \
         --dbname="${WORDPRESS_DB_NAME}" \
         --dbuser="${WORDPRESS_DB_USER}" \
-        --dbpass="$(cat /run/secrets/db_password)" \
+        --dbpass="${WORDPRESS_DB_PASSWORD}" \
         --dbhost="${WORDPRESS_DB_HOST}" \
         --path=/var/www/wordpress \
         --allow-root
@@ -33,7 +33,7 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
         --url="hheng.42.fr" \
         --title="Inception" \
         --admin_user="hheng" \
-        --admin_password="$(cat /run/secrets/wp_password)" \
+        --admin_password="${WP_ADMIN_PASSWORD}" \
         --admin_email="admin@hheng.42.fr" \
         --path=/var/www/wordpress \
         --allow-root
@@ -43,7 +43,7 @@ fi
 if ! wp user get wpuser2 --path=/var/www/wordpress --allow-root > /dev/null 2>&1; then
     wp user create wpuser2 user@hheng.42.fr \
         --role=author \
-        --user_pass="$(cat /run/secrets/db_password)" \
+        --user_pass="${WORDPRESS_DB_PASSWORD}" \
         --path=/var/www/wordpress \
         --allow-root
 fi

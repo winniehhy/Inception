@@ -5,8 +5,7 @@ echo "Starting FTP setup..."
 if ! id -u ftpuser > /dev/null 2>&1; then
     echo "Creating ftpuser..."
     useradd -m -d /var/www/wordpress -G www-data ftpuser
-    FTP_PASS=$(cat /run/secrets/ftp_password 2>/dev/null || echo "defaultpass")
-    echo "ftpuser:${FTP_PASS}" | chpasswd
+    echo "ftpuser:${FTP_PASSWORD}" | chpasswd
     echo "ftpuser" > /etc/vsftpd.userlist
     echo "User ftpuser created successfully"
 fi

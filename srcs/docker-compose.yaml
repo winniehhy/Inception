@@ -18,15 +18,12 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - inception
-    secrets:
-      - db_root_password
-      - db_password
     restart: unless-stopped
 
   wordpress:
@@ -37,17 +34,15 @@ services:
     environment:
       WORDPRESS_DB_HOST: mariadb
       WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
     networks:
       - inception
     depends_on:
       - mariadb
       - redis
-    secrets:
-      - db_password
-      - db_root_password
-      - wp_password
     restart: unless-stopped
 
   # BONUS SERVICES
@@ -66,10 +61,10 @@ services:
       - "21000-21010:21000-21010"
     volumes:
       - wordpress_data:/var/www/wordpress
+    environment:
+      FTP_PASSWORD: ${FTP_PASSWORD}
     networks:
       - inception
-    secrets:
-      - ftp_password
     restart: unless-stopped
 
   adminer:
@@ -123,13 +118,3 @@ volumes:
 networks:
   inception:
     driver: bridge
-
-secrets:
-  db_root_password:
-    file: ../secrets/db_root_password.txt
-  db_password:
-    file: ../secrets/db_password.txt
-  wp_password:
-    file: ../secrets/wp_password.txt
-  ftp_password:
-    file: ../secrets/ftp_password.txt

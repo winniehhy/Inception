@@ -25,3 +25,6 @@ EXPOSE 9443
 # --http-disabled - Only HTTPS (secure)
 # --bind=:9443 - Listen on port 9443
 CMD ["portainer", "--http-disabled", "--bind=:9443"]
+
+
+#localhost:9443 (username : hheng)
